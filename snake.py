@@ -1,6 +1,7 @@
 from tkinter import *
 import random
 
+
 # Globals
 WIDTH = 800
 HEIGHT = 600
@@ -18,6 +19,13 @@ def create_block():
                           posx+SEG_SIZE, posy+SEG_SIZE,
                           fill="red")
 
+def close_win():
+    quit()
+    
+def reset():
+    IN_GAME = True
+    Snake.__init__(0, segments)
+    main()
 
 def main():
     """ Handles game process """
@@ -39,16 +47,17 @@ def main():
             for index in range(len(s.segments)-1):
                 if head_coords == c.coords(s.segments[index].instance):
                     IN_GAME = False
-        root.after(100, main)
+        root.after(150, main)
     # Not IN_GAME -> stop game and print message
     else:
+        win = Tk()
+        win.title("Game over!")
         
-        c.create_text(WIDTH/2, HEIGHT/2,
-                      text="GAME OVER!",
-                      font="Arial 20",
-                      fill="red")
-                      
-        
+        but_again = Button(win, text = "Again", width=15,height=5, command = reset)
+        but_exit = Button(win, text = "Exit", width=15,height=5, command = close_win)
+        but_exit.pack()
+        win.mainloop()
+
 
 
 class Segment(object):
@@ -98,6 +107,7 @@ root = Tk()
 root.title("Snake 1.0")
 
 
+
 c = Canvas(root, width=WIDTH, height=HEIGHT, bg="#E6E6FA")
 c.grid()
 # catch keypressing
@@ -109,7 +119,6 @@ segments = [Segment(SEG_SIZE, SEG_SIZE),
 s = Snake(segments)
 # Reaction on keypress
 c.bind("<KeyPress>", s.change_direction)
-
 create_block()
 main()
 root.mainloop()
